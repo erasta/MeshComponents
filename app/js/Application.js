@@ -9,10 +9,8 @@ class Application {
 
         this.initGui();
 
-        var material = new THREE.MeshStandardMaterial({ color: 'lightgreen', vertexColors: THREE.FaceColors });
-        this.mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
-        this.mesh.position.set(0, 0, 3);
-        this.sceneManager.scene.add(this.mesh);
+        this.meshes = [];
+        // this.sceneManager.scene.add(this.mesh);
 
         this.applyGuiChanges();
     }
@@ -32,7 +30,7 @@ class Application {
         reader.onload = ((theFile) => {
             return (e) => {
                 console.log("loaded " + theFile.name);
-                this.mesh.geometry = new THREE.STLLoader().parse(e.target.result);
+                this.geom = new THREE.STLLoader().parse(e.target.result);
                 this.analyzeMesh();
             };
         })(file);
@@ -42,19 +40,33 @@ class Application {
     }
 
     analyzeMesh() {
-        this.xref = new MeshXref(this.mesh.geometry);
+        this.meshes.forEach(m => this.sceneManager.scene.remove(m));
+        this.meshes = [];
+
+        this.xref = new MeshXref(this.geom);
         this.xref.calcVertexToVertex();
         this.cc = stronglyConnectedComponents(this.xref.vertexToVertex).components;
-        console.log(this.cc);
-        this.mesh.geometry.computeFlatVertexNormals();
+        console.log("comp: " + this.cc.length);
         this.xref.calcVertexToFace();
-        var vert2cc = new Array(this.mesh.geometry.vertices.length);
+
+        var vert2cc = new Array(this.geom.vertices.length);
         this.cc.forEach(c => {
-            c.forEach(v => vert2cc[v] = c)
-            var col = new THREE.Color(Math.random(), Math.random(), Math.random());
-            this.mesh.geometry.faces.forEach(f => {
-                if (vert2cc[f.a] == c) f.color = col;
-            })
+            var color = new THREE.Color(Math.random(), Math.random(), Math.random());
+            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color }));
+            c.forEach(v => {
+                vert2cc[v] = c;
+            });
+            this.geom.faces.forEach(f => {
+                if (vert2cc[f.a] == c) {
+                    var v = mesh.geometry.vertices.length;
+                    mesh.geometry.vertices.push(this.geom.vertices[f.a], this.geom.vertices[f.b], this.geom.vertices[f.c]);
+                    mesh.geometry.faces.push(new THREE.Face3(v, v + 1, v + 2));
+                }
+            });
+            mesh.geometry.mergeVertices();
+            mesh.geometry.computeFlatVertexNormals();
+            this.meshes.push(mesh);
+            this.sceneManager.scene.add(mesh);
         });
     }
 
