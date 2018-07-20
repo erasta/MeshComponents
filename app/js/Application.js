@@ -9,7 +9,7 @@ class Application {
 
         this.initGui();
 
-        var material = new THREE.MeshStandardMaterial({ color: 'red' });
+        var material = new THREE.MeshStandardMaterial({ color: 'grey' });
         this.mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
         this.mesh.position.set(0, 0, 3);
         this.sceneManager.scene.add(this.mesh);
@@ -32,7 +32,7 @@ class Application {
         reader.onload = ((theFile) => {
             return (e) => {
                 console.log("loaded " + theFile.name);
-                console.log(e.target.result);
+                this.mesh.geometry = new THREE.STLLoader().parse(e.target.result);
             };
         })(file);
         setTimeout(() => {
@@ -43,7 +43,7 @@ class Application {
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
         this.gui = new dat.GUI({ autoPlace: true, width: 500 });
-        this.gui.add(this, 'readStl');
+        this.gui.add(this, 'readStl').name('Read STL');
         // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
