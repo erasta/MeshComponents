@@ -1,6 +1,11 @@
 class Application {
     init() {
-        this.ballSize = 3;
+        // this.ballSize = 3;
+
+        var that = this;
+        document.getElementById('fileInput').addEventListener('change', (evt) => {
+            that.readStlFile(evt.target.files[0]);
+        }, false);
 
         this.initGui();
 
@@ -14,13 +19,32 @@ class Application {
 
     applyGuiChanges() {
         // console.log(guiParams.ballSize);
-        this.mesh.scale.set(this.ballSize, this.ballSize, this.ballSize);
+        // this.mesh.scale.set(this.ballSize, this.ballSize, this.ballSize);
+    }
+
+    readStl() {
+        document.getElementById('fileInput').value = "";
+        document.getElementById('fileInput').click();
+    }
+
+    readStlFile(file) {
+        var reader = new FileReader();
+        reader.onload = ((theFile) => {
+            return (e) => {
+                console.log("loaded " + theFile.name);
+                console.log(e.target.result);
+            };
+        })(file);
+        setTimeout(() => {
+            reader.readAsText(file);
+        }, 10);
     }
 
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
         this.gui = new dat.GUI({ autoPlace: true, width: 500 });
-        this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
+        this.gui.add(this, 'readStl');
+        // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
     onClick(inter) {
