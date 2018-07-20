@@ -9,7 +9,7 @@ class Application {
 
         this.initGui();
 
-        var material = new THREE.MeshStandardMaterial({ color: 'lightgreen' });
+        var material = new THREE.MeshStandardMaterial({ color: 'lightgreen', vertexColors: THREE.FaceColors });
         this.mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
         this.mesh.position.set(0, 0, 3);
         this.sceneManager.scene.add(this.mesh);
@@ -47,7 +47,15 @@ class Application {
         this.cc = stronglyConnectedComponents(this.xref.vertexToVertex).components;
         console.log(this.cc);
         this.mesh.geometry.computeFlatVertexNormals();
-        // this.xref.calcVertexToFace();
+        this.xref.calcVertexToFace();
+        var vert2cc = new Array(this.mesh.geometry.vertices.length);
+        this.cc.forEach(c => {
+            c.forEach(v => vert2cc[v] = c)
+            var col = new THREE.Color(Math.random(), Math.random(), Math.random());
+            this.mesh.geometry.faces.forEach(f => {
+                if (vert2cc[f.a] == c) f.color = col;
+            })
+        });
     }
 
     initGui() {
