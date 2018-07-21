@@ -115,6 +115,7 @@ class Application {
     onClick(inter) {
         // this.sceneManager.scene.remove(this.dot);
         inter = inter.filter(o => o.object instanceof THREE.Mesh);
+        if (inter.length == 0) return;
         var s = this.meshes.indexOf(inter[0].object);
         if (s < 0) return;
         this.selected[s] = !this.selected[s];

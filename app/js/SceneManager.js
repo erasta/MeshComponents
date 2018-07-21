@@ -35,7 +35,7 @@ class SceneManager {
         this.renderer.setClearColor(0x888888, 1);
         this.renderer.clear();
         this.scene.add(new THREE.HemisphereLight(0xffffff, 0x222222));
-        var grid = new THREE.GridHelper(50, 50);
+        var grid = new THREE.GridHelper(50, 50, new THREE.Color('yellow'), new THREE.Color('grey'));
         grid.rotation.x = Math.PI / 2;
         this.scene.add(grid);
 
