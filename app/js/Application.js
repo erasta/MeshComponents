@@ -43,7 +43,6 @@ class Application {
     analyzeMesh() {
         this.meshes.forEach(m => this.sceneManager.scene.remove(m));
         this.meshes = [];
-        this.selected = -1;
 
         this.xref = new MeshXref(this.geom);
         this.xref.calcVertexToVertex();
@@ -70,6 +69,8 @@ class Application {
             this.meshes.push(mesh);
             this.sceneManager.scene.add(mesh);
         });
+        this.selected = [];
+        for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = false;
     }
 
     writeStl() {
@@ -95,10 +96,12 @@ class Application {
 
     onClick(inter) {
         // this.sceneManager.scene.remove(this.dot);
-        this.selected = this.meshes.indexOf(inter[0].object);
-        if (this.selected < 0) return;
+        inter = inter.filter(o => o.object instanceof THREE.Mesh);
+        var s = this.meshes.indexOf(inter[0].object);
+        if (s < 0) return;
+        this.selected[s] = !this.selected[s];
         this.meshes.forEach((m, i) => {
-            m.material.wireframe = i != this.selected;
+            m.material.wireframe = !this.selected[i];
         });
         // this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
         // this.dot.position.copy(inter[0].point);
