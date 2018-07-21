@@ -73,10 +73,15 @@ class Application {
     }
 
     writeStl() {
-        if (this.selected < 0 || this.selected >= this.meshes.length) return;
+        if (this.selected < 0 || this.selected >= this.meshes.length) {
+            alert("Please click on a component");
+            return;
+        };
+        var filename = prompt("Stl file name", "mesh_component.stl");
+        if (!filename.toLowerCase().endsWith(".stl")) filename = filename + ".stl";
         var data = new THREE.STLExporter().parse(this.meshes[this.selected]);
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "mesh_component.stl");
+        saveAs(blob, filename);
         // console.log(data);
     }
 
