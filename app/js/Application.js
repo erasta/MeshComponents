@@ -73,16 +73,21 @@ class Application {
 
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
-        this.gui = new dat.GUI({ autoPlace: true, width: 500 });
+        this.gui = new dat.GUI({ autoPlace: true });//, width: 500 });
         this.gui.add(this, 'startReadStl').name('Read STL');
         // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
     onClick(inter) {
-        this.sceneManager.scene.remove(this.dot);
-        if (inter[0].object !== this.mesh) return;
-        this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
-        this.dot.position.copy(inter[0].point);
-        this.sceneManager.scene.add(this.dot);
+        // this.sceneManager.scene.remove(this.dot);
+        var index = this.meshes.indexOf(inter[0].object);
+        if (index < 0) return;
+        var data = new THREE.STLExporter().parse(this.meshes[index]);
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "mesh_component.stl");
+        console.log(data);
+        // this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
+        // this.dot.position.copy(inter[0].point);
+        // this.sceneManager.scene.add(this.dot);
     }
 }
