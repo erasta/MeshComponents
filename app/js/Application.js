@@ -31,6 +31,7 @@ class Application {
             return (e) => {
                 console.log("loaded " + theFile.name);
                 this.geom = new THREE.STLLoader().parse(e.target.result);
+                if (this.geom instanceof THREE.BufferGeometry) this.geom = new THREE.Geometry().fromBufferGeometry(this.geom);
                 this.analyzeMesh();
             };
         })(file);

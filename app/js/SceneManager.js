@@ -15,7 +15,6 @@ class SceneManager {
 
         this.renderer.gammaInput = true;
         this.renderer.gammaOutput = true;
-        this.renderer.setFaceCulling(0);
 
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
         this.container.appendChild(this.renderer.domElement);
