@@ -53,7 +53,7 @@ class Application {
         var vert2cc = new Array(this.geom.vertices.length);
         this.cc.forEach(c => {
             var color = new THREE.Color(Math.random(), Math.random(), Math.random());
-            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color }));
+            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color, wireframe: true }));
             c.forEach(v => {
                 vert2cc[v] = c;
             });
@@ -74,15 +74,18 @@ class Application {
     }
 
     writeStl() {
-        if (this.selected < 0 || this.selected >= this.meshes.length) {
+        if (this.selected.indexOf(true) < 0) {
             alert("Please click on a component");
             return;
         };
-        var filename = prompt("Stl file name", "mesh_component.stl");
-        if (!filename.toLowerCase().endsWith(".stl")) filename = filename + ".stl";
-        var data = new THREE.STLExporter().parse(this.meshes[this.selected]);
-        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, filename);
+        var filename = "mesh_component";
+        this.selected.forEach((s, i) => {
+            if (!s) return;
+            filename = prompt("STL file name", filename);
+            var data = new THREE.STLExporter().parse(this.meshes[i]);
+            var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, filename.toLowerCase().endsWith(".stl") ? filename : filename + ".stl");
+        });
         // console.log(data);
     }
 
