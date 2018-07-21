@@ -54,7 +54,7 @@ class Application {
         var vert2cc = new Array(this.geom.vertices.length);
         this.cc.forEach(c => {
             var color = new THREE.Color(Math.random(), Math.random(), Math.random());
-            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color, wireframe: true }));
+            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color }));//, wireframe: false }));
             c.forEach(v => {
                 vert2cc[v] = c;
             });
@@ -71,7 +71,8 @@ class Application {
             this.sceneManager.scene.add(mesh);
         });
         this.selected = [];
-        for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = false;
+        for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = true;
+        this.updateSelection();
     }
 
     writeMeshStl(mesh, filename) {
@@ -117,11 +118,16 @@ class Application {
         var s = this.meshes.indexOf(inter[0].object);
         if (s < 0) return;
         this.selected[s] = !this.selected[s];
-        this.meshes.forEach((m, i) => {
-            m.material.wireframe = !this.selected[i];
-        });
+        this.updateSelection();
         // this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
         // this.dot.position.copy(inter[0].point);
         // this.sceneManager.scene.add(this.dot);
+    }
+    
+    updateSelection() {
+        // console.log(this.selected);
+        this.meshes.forEach((m, i) => {
+            m.material.wireframe = !this.selected[i];
+        });
     }
 }
