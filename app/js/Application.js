@@ -43,6 +43,7 @@ class Application {
     analyzeMesh() {
         this.meshes.forEach(m => this.sceneManager.scene.remove(m));
         this.meshes = [];
+        this.selected = -1;
 
         this.xref = new MeshXref(this.geom);
         this.xref.calcVertexToVertex();
@@ -71,21 +72,29 @@ class Application {
         });
     }
 
+    writeStl() {
+        if (this.selected < 0 || this.selected >= this.meshes.length) return;
+        var data = new THREE.STLExporter().parse(this.meshes[this.selected]);
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "mesh_component.stl");
+        // console.log(data);
+    }
+
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
-        this.gui = new dat.GUI({ autoPlace: true });//, width: 500 });
+        this.gui = new dat.GUI({ autoPlace: true, width: 300 });
         this.gui.add(this, 'startReadStl').name('Read STL');
+        this.gui.add(this, 'writeStl').name('Write Selected STL');
         // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
     onClick(inter) {
         // this.sceneManager.scene.remove(this.dot);
-        var index = this.meshes.indexOf(inter[0].object);
-        if (index < 0) return;
-        var data = new THREE.STLExporter().parse(this.meshes[index]);
-        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "mesh_component.stl");
-        console.log(data);
+        this.selected = this.meshes.indexOf(inter[0].object);
+        if (this.selected < 0) return;
+        this.meshes.forEach((m, i) => {
+            m.material.wireframe = i != this.selected;
+        });
         // this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
         // this.dot.position.copy(inter[0].point);
         // this.sceneManager.scene.add(this.dot);
