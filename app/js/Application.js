@@ -1,6 +1,7 @@
 class Application {
     init() {
         // this.ballSize = 3;
+        this.askNameForEachFile = false;
 
         var that = this;
         document.getElementById('fileInput').addEventListener('change', (evt) => {
@@ -73,19 +74,31 @@ class Application {
         for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = false;
     }
 
+    writeMeshStl(mesh, filename) {
+        var data = new THREE.STLExporter().parse(mesh);
+        var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, filename.toLowerCase().endsWith(".stl") ? filename : filename + ".stl");
+    }
     writeStl() {
         if (this.selected.indexOf(true) < 0) {
             alert("Please click on a component");
             return;
         };
         var filename = "mesh_component";
-        this.selected.forEach((s, i) => {
-            if (!s) return;
-            filename = prompt("STL file name", filename);
-            var data = new THREE.STLExporter().parse(this.meshes[i]);
-            var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, filename.toLowerCase().endsWith(".stl") ? filename : filename + ".stl");
-        });
+        if (this.askNameForEachFile || this.selected.filter(s => s === true).length <= 1) {
+            this.selected.forEach((s, i) => {
+                if (!s) return;
+                filename = prompt("STL file name", filename);
+                this.writeMeshStl(this.meshes[i], filename);
+            });
+        } else {
+            filename = prompt("STL file prefix", filename);
+            var counter = 1;
+            this.selected.forEach((s, i) => {
+                if (!s) return;
+                this.writeMeshStl(this.meshes[i], filename + counter++);
+            });
+        }
         // console.log(data);
     }
 
@@ -94,6 +107,7 @@ class Application {
         this.gui = new dat.GUI({ autoPlace: true, width: 300 });
         this.gui.add(this, 'startReadStl').name('Read STL');
         this.gui.add(this, 'writeStl').name('Write Selected STL');
+        this.gui.add(this, 'askNameForEachFile').name('Ask Name For Each File');
         // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
