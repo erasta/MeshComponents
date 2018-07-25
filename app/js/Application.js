@@ -2,6 +2,7 @@
 
 import SceneManager from "./SceneManager.js"
 import MeshXref from "./MeshXref.js"
+import stronglyConnectedComponents from "./scc.js"
 
 export class Application {
     init() {

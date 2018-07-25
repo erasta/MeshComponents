@@ -2,7 +2,7 @@
 
 // Obtained from https://github.com/mikolalysenko/strongly-connected-components
 
-function stronglyConnectedComponents(adjList) {
+export default function stronglyConnectedComponents(adjList) {
   var numVertices = adjList.length;
   var index = new Array(numVertices)
   var lowValue = new Array(numVertices)
