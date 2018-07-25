@@ -50,7 +50,8 @@ export class Application {
         this.meshes.forEach(m => this.sceneManager.scene.remove(m));
         this.meshes = [];
 
-        this.meshes = new MeshConnectedComponents().go(new THREE.Mesh(this.geom));
+        var geometries = new MeshConnectedComponents().mcc(this.geom);
+        this.meshes = geometries.map(g => new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: new THREE.Color(Math.random(), Math.random(), Math.random())})));
         this.meshes.forEach(mesh => this.sceneManager.scene.add(mesh));
         this.selected = [];
         for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = true;
