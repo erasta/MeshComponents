@@ -1,4 +1,6 @@
-class MeshXref {
+"use strict"
+
+export default class MeshXref {
     constructor(geometry) {
         this.geometry = geometry;
         this.geometry.mergeVertices();

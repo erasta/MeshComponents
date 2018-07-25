@@ -1,4 +1,9 @@
-class Application {
+"use strict"
+
+import SceneManager from "./SceneManager.js"
+import MeshXref from "./MeshXref.js"
+
+export class Application {
     init() {
         // this.ballSize = 3;
         this.askNameForEachFile = false;
@@ -132,3 +137,5 @@ class Application {
         });
     }
 }
+
+new SceneManager(new Application());

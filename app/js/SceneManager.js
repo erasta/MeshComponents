@@ -1,4 +1,6 @@
-class SceneManager {
+"use strict"
+
+export default class SceneManager {
     constructor(application) {
         THREE.Object3D.DefaultUp.set(0, 0, 1);
 
