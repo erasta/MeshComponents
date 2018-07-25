@@ -1,8 +1,7 @@
 "use strict"
 
 import SceneManager from "./SceneManager.js"
-import MeshXref from "./MeshXref.js"
-import stronglyConnectedComponents from "./scc.js"
+import MeshConnectedComponents from "./MeshConnectedComponents.js"
 
 export class Application {
     init() {
@@ -51,31 +50,8 @@ export class Application {
         this.meshes.forEach(m => this.sceneManager.scene.remove(m));
         this.meshes = [];
 
-        this.xref = new MeshXref(this.geom);
-        this.xref.calcVertexToVertex();
-        this.cc = stronglyConnectedComponents(this.xref.vertexToVertex).components;
-        console.log("comp: " + this.cc.length);
-        this.xref.calcVertexToFace();
-
-        var vert2cc = new Array(this.geom.vertices.length);
-        this.cc.forEach(c => {
-            var color = new THREE.Color(Math.random(), Math.random(), Math.random());
-            var mesh = new THREE.Mesh(new THREE.Geometry(), new THREE.MeshStandardMaterial({ color: color }));//, wireframe: false }));
-            c.forEach(v => {
-                vert2cc[v] = c;
-            });
-            this.geom.faces.forEach(f => {
-                if (vert2cc[f.a] == c) {
-                    var v = mesh.geometry.vertices.length;
-                    mesh.geometry.vertices.push(this.geom.vertices[f.a], this.geom.vertices[f.b], this.geom.vertices[f.c]);
-                    mesh.geometry.faces.push(new THREE.Face3(v, v + 1, v + 2));
-                }
-            });
-            mesh.geometry.mergeVertices();
-            mesh.geometry.computeFlatVertexNormals();
-            this.meshes.push(mesh);
-            this.sceneManager.scene.add(mesh);
-        });
+        this.meshes = new MeshConnectedComponents().go(new THREE.Mesh(this.geom));
+        this.meshes.forEach(mesh => this.sceneManager.scene.add(mesh));
         this.selected = [];
         for (var i = 0; i < this.meshes.length; ++i) this.selected[i] = true;
         this.updateSelection();
