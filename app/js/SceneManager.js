@@ -21,10 +21,6 @@ export default class SceneManager {
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
         this.container.appendChild(this.renderer.domElement);
 
-        // // Stats of FPS
-        // stats = new Stats();
-        // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        // document.body.appendChild(stats.domElement);
 
         // CAMERA
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000);
@@ -65,9 +61,7 @@ export default class SceneManager {
     }
 
     animate() {
-        // stats.begin();
         this.renderer.render(this.scene, this.camera);
-        // stats.end();
         requestAnimationFrame(this.animate);
     }
 
