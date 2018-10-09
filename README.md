@@ -3,6 +3,8 @@ Split mesh into connected components online
 
 https://erasta.github.io/MeshComponents/
 
+<img src="ScreenShot.png" width="300"/>
+
 Suppose you have a mesh that has multiple components that are not connected.
 
 This app will load (locally) the mesh from an STL file and analyze it.
