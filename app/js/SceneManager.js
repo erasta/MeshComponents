@@ -7,20 +7,11 @@ export default class SceneManager {
         // SCENE
         this.scene = new THREE.Scene();
         this.container = document.getElementById('ThreeJS');
-
-        // RENDERER
-        if (Detector.webgl) {
-            this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        } else {
-            this.renderer = new THREE.CanvasRenderer();
-        }
-
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.gammaInput = true;
         this.renderer.gammaOutput = true;
-
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
         this.container.appendChild(this.renderer.domElement);
-
 
         // CAMERA
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000);
