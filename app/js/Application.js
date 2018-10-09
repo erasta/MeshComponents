@@ -92,7 +92,7 @@ export class Application {
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
         this.gui = new dat.GUI({ autoPlace: true, width: 300 });
-        this.gui.add(this, 'startReadStl').name('Analyze Components');
+        this.gui.add(this, 'startReadStl').name('Read new STL');
         this.gui.add(this, 'writeStl').name('Write Selected');
         this.gui.add(this, 'askNameForEachFile').name('Ask Name For Each File');
     }
