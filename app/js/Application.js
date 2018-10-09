@@ -92,27 +92,21 @@ export class Application {
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
         this.gui = new dat.GUI({ autoPlace: true, width: 300 });
-        this.gui.add(this, 'startReadStl').name('Analyze Components from STL');
-        this.gui.add(this, 'writeStl').name('Write Selected Components to STLs');
+        this.gui.add(this, 'startReadStl').name('Analyze Components');
+        this.gui.add(this, 'writeStl').name('Write Selected');
         this.gui.add(this, 'askNameForEachFile').name('Ask Name For Each File');
-        // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
 
     onClick(inter) {
-        // this.sceneManager.scene.remove(this.dot);
         inter = inter.filter(o => o.object instanceof THREE.Mesh);
         if (inter.length == 0) return;
         var s = this.meshes.indexOf(inter[0].object);
         if (s < 0) return;
         this.selected[s] = !this.selected[s];
         this.updateSelection();
-        // this.dot = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshNormalMaterial());
-        // this.dot.position.copy(inter[0].point);
-        // this.sceneManager.scene.add(this.dot);
     }
 
     updateSelection() {
-        // console.log(this.selected);
         this.meshes.forEach((m, i) => {
             m.material.wireframe = !this.selected[i];
         });
