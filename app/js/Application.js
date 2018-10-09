@@ -92,8 +92,8 @@ export class Application {
     initGui() {
         this.applyGuiChanges = this.applyGuiChanges.bind(this);
         this.gui = new dat.GUI({ autoPlace: true, width: 300 });
-        this.gui.add(this, 'startReadStl').name('Read STL');
-        this.gui.add(this, 'writeStl').name('Write Selected STL');
+        this.gui.add(this, 'startReadStl').name('Analyze Components from STL');
+        this.gui.add(this, 'writeStl').name('Write Selected Components to STLs');
         this.gui.add(this, 'askNameForEachFile').name('Ask Name For Each File');
         // this.gui.add(this, 'ballSize').name('Ball size').min(0.1).max(16).step(0.01).onChange(this.applyGuiChanges);
     }
