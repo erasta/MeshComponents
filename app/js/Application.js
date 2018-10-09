@@ -16,9 +16,12 @@ export class Application {
         this.initGui();
 
         this.meshes = [];
-        // this.sceneManager.scene.add(this.mesh);
+        this.geom = new THREE.SphereGeometry(3, 32, 32);
+        this.geom.merge(new THREE.CylinderGeometry(3, 3, 3, 32), new THREE.Matrix4().makeTranslation(7, 0, 0));
+        this.geom.merge(new THREE.TorusKnotGeometry(2, 0.4, 128, 32), new THREE.Matrix4().makeTranslation(-7, 0, 0));
+        this.analyzeMesh();
 
-        this.applyGuiChanges();
+        // this.applyGuiChanges();
     }
 
     applyGuiChanges() {
@@ -107,7 +110,7 @@ export class Application {
         // this.dot.position.copy(inter[0].point);
         // this.sceneManager.scene.add(this.dot);
     }
-    
+
     updateSelection() {
         // console.log(this.selected);
         this.meshes.forEach((m, i) => {
